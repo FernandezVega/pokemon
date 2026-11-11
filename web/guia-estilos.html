@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía de estilos · Pokédex DAW</title>
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/style.css"><script src="js/tema.js"></script></head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+<header class="cabecera">
+  <a class="marca" href="index.php"><span class="marca__bola" aria-hidden="true"></span>Pokédex <span class="marca__detalle">DAW</span></a>
+  <nav class="nav" aria-label="Principal"><a class="nav__enlace" href="index.php">Catálogo</a><a class="nav__enlace" href="pokedex.php">Mi Pokédex</a><a class="nav__enlace" href="guia-estilos.html" aria-current="page">Guía de estilos</a></nav>
+  <div class="cabecera__herramientas"><button id="tema-boton" class="boton boton--icono" type="button" aria-pressed="false" aria-label="Cambiar tema">🌙</button></div>
+</header>
+<main id="contenido" class="contenedor">
+<div class="titulo-pagina"><h1>Guía de estilos</h1><p class="titulo-pagina__sub">Catálogo vivo del sistema de diseño. Reglas y criterios en <code>DESIGN.md</code>. Cambia el tema con el botón de la cabecera.</p></div>
+
+<section class="guia-seccion"><h2>Color semántico</h2><div class="muestra"><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-fondo)"></div><code>--color-fondo</code>Fondo</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-superficie)"></div><code>--color-superficie</code>Superficie</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-superficie-2)"></div><code>--color-superficie-2</code>Superficie 2</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-borde)"></div><code>--color-borde</code>Borde</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-texto)"></div><code>--color-texto</code>Texto</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-texto-suave)"></div><code>--color-texto-suave</code>Texto suave</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-marca)"></div><code>--color-marca</code>Marca</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-marca-hover)"></div><code>--color-marca-hover</code>Marca hover</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-peligro)"></div><code>--color-peligro</code>Peligro</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-exito-fondo)"></div><code>--color-exito-fondo</code>Éxito (fondo)</div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-error-fondo)"></div><code>--color-error-fondo</code>Error (fondo)</div></div></section>
+<section class="guia-seccion"><h2>Color por tipo de Pokémon</h2><div class="muestra"><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-normal)"></div><code>--tipo-normal</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-fire)"></div><code>--tipo-fire</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-water)"></div><code>--tipo-water</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-electric)"></div><code>--tipo-electric</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-grass)"></div><code>--tipo-grass</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-ice)"></div><code>--tipo-ice</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-fighting)"></div><code>--tipo-fighting</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-poison)"></div><code>--tipo-poison</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-ground)"></div><code>--tipo-ground</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-flying)"></div><code>--tipo-flying</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-psychic)"></div><code>--tipo-psychic</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-bug)"></div><code>--tipo-bug</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-rock)"></div><code>--tipo-rock</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-ghost)"></div><code>--tipo-ghost</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-dragon)"></div><code>--tipo-dragon</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-dark)"></div><code>--tipo-dark</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-steel)"></div><code>--tipo-steel</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--tipo-fairy)"></div><code>--tipo-fairy</code></div></div></section>
+<section class="guia-seccion"><h2>Tipografía</h2>
+  <h1>Título de página (--tam-xl)</h1><h2>Título de sección y tarjeta (--tam-l)</h2>
+  <p>Texto base (--tam-m). Fuente del sistema: sin descargas, funciona sin internet.</p>
+  <p class="estado">Texto de estado (--tam-s, color suave)</p><p class="tarjeta__suave">Texto auxiliar (--tam-xs)</p></section>
+<section class="guia-seccion"><h2>Espaciado (base 4 px)</h2><div class="fila"><code style="width:7rem">--esp-1</code><span style="display:block;height:.9rem;background:var(--color-marca);border-radius:4px;width:var(--esp-1)"></span></div><div class="fila"><code style="width:7rem">--esp-2</code><span style="display:block;height:.9rem;background:var(--color-marca);border-radius:4px;width:var(--esp-2)"></span></div><div class="fila"><code style="width:7rem">--esp-3</code><span style="display:block;height:.9rem;background:var(--color-marca);border-radius:4px;width:var(--esp-3)"></span></div><div class="fila"><code style="width:7rem">--esp-4</code><span style="display:block;height:.9rem;background:var(--color-marca);border-radius:4px;width:var(--esp-4)"></span></div><div class="fila"><code style="width:7rem">--esp-5</code><span style="display:block;height:.9rem;background:var(--color-marca);border-radius:4px;width:var(--esp-5)"></span></div><div class="fila"><code style="width:7rem">--esp-6</code><span style="display:block;height:.9rem;background:var(--color-marca);border-radius:4px;width:var(--esp-6)"></span></div><div class="fila"><code style="width:7rem">--esp-7</code><span style="display:block;height:.9rem;background:var(--color-marca);border-radius:4px;width:var(--esp-7)"></span></div><div class="fila"><code style="width:7rem">--esp-8</code><span style="display:block;height:.9rem;background:var(--color-marca);border-radius:4px;width:var(--esp-8)"></span></div></section>
+<section class="guia-seccion"><h2>Radios</h2><div class="muestra"><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-superficie-2);border-radius:var(--radio-s)"></div><code>--radio-s</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-superficie-2);border-radius:var(--radio-m)"></div><code>--radio-m</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-superficie-2);border-radius:var(--radio-l)"></div><code>--radio-l</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-superficie-2);border-radius:var(--radio-pill)"></div><code>--radio-pill</code></div></div></section>
+<section class="guia-seccion"><h2>Sombras</h2><div class="muestra"><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-superficie);box-shadow:var(--sombra-1)"></div><code>--sombra-1</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-superficie);box-shadow:var(--sombra-2)"></div><code>--sombra-2</code></div><div class="muestra__color"><div class="muestra__bloque" style="background:var(--color-superficie);box-shadow:var(--sombra-3)"></div><code>--sombra-3</code></div></div></section>
+
+<section class="guia-seccion"><h2>Botones</h2><div class="fila">
+  <button class="boton" type="button">Primario</button><button class="boton boton--secundario" type="button">Secundario</button>
+  <button class="boton boton--peligro" type="button">Peligro</button><button class="boton boton--peq" type="button">Pequeño</button>
+  <button class="boton" type="button" disabled>Deshabilitado</button></div></section>
+
+<section class="guia-seccion"><h2>Animación de captura (D6)</h2>
+  <p>Al confirmar una captura, la pokébola de la marca salta y gira una vez. Se activa con <code>body.captura-nueva</code> y respeta <code>prefers-reduced-motion</code>.</p>
+  <div class="fila"><button id="demo-captura" class="boton" type="button">Reproducir animación</button></div></section>
+
+<section class="guia-seccion"><h2>Campos de formulario</h2>
+  <form class="formulario" onsubmit="return false">
+    <label class="campo">Texto <input class="control" value="Rayo"><span class="campo__ayuda">Texto de ayuda</span></label>
+    <label class="campo">Selector <select class="control"><option>Opción A</option><option>Opción B</option></select></label>
+    <label class="campo">Área de texto <textarea class="control" rows="2">Notas…</textarea></label>
+    <div class="formulario__acciones"><button class="boton">Guardar</button><button class="boton boton--secundario" type="button">Cancelar</button></div>
+  </form></section>
+
+<section class="guia-seccion"><h2>Chips de tipo (texto con contraste ≥ 4,5:1)</h2><div class="fila"><span class="chip" data-tipo="normal">normal</span><span class="chip" data-tipo="fire">fire</span><span class="chip" data-tipo="water">water</span><span class="chip" data-tipo="electric">electric</span><span class="chip" data-tipo="grass">grass</span><span class="chip" data-tipo="ice">ice</span><span class="chip" data-tipo="fighting">fighting</span><span class="chip" data-tipo="poison">poison</span><span class="chip" data-tipo="ground">ground</span><span class="chip" data-tipo="flying">flying</span><span class="chip" data-tipo="psychic">psychic</span><span class="chip" data-tipo="bug">bug</span><span class="chip" data-tipo="rock">rock</span><span class="chip" data-tipo="ghost">ghost</span><span class="chip" data-tipo="dragon">dragon</span><span class="chip" data-tipo="dark">dark</span><span class="chip" data-tipo="steel">steel</span><span class="chip" data-tipo="fairy">fairy</span></div></section>
+<section class="guia-seccion"><h2>Insignias y estadísticas</h2><div class="fila"><span class="insignia">#0025</span><span class="insignia">Nv. 12</span></div>
+  <ul class="estadisticas"><li class="estadistica" data-tipo="fire"><strong>3</strong> fire · nivel medio 14.5</li><li class="estadistica" data-tipo="water"><strong>1</strong> water · nivel medio 9.0</li><li class="estadistica" data-tipo="electric"><strong>2</strong> electric · nivel medio 20.0</li></ul></section>
+
+<section class="guia-seccion"><h2>Filtro por tipo (D2)</h2>
+  <p>Chips clicables que filtran el catálogo. Son enlaces reales (<code>?tipo=…</code>): funcionan sin JavaScript y conservan la búsqueda y la generación. El activo se marca con <code>aria-current="true"</code>.</p>
+  <nav class="estadisticas filtros-tipo" aria-label="Filtro por tipo (ejemplo)">
+    <a class="estadistica" href="index.php" aria-current="false">Todos</a>
+    <a class="estadistica" data-tipo="fire" href="index.php?tipo=fire" aria-current="false"><span class="chip" data-tipo="fire">fire</span></a>
+    <a class="estadistica" data-tipo="water" href="index.php?tipo=water" aria-current="true"><span class="chip" data-tipo="water">water</span></a>
+    <a class="estadistica" data-tipo="electric" href="index.php?tipo=electric" aria-current="false"><span class="chip" data-tipo="electric">electric</span></a>
+    <a class="estadistica" data-tipo="grass" href="index.php?tipo=grass" aria-current="false"><span class="chip" data-tipo="grass">grass</span></a>
+  </nav></section>
+
+<section class="guia-seccion"><h2>Tarjeta de Pokémon</h2><div class="rejilla">
+  <article class="tarjeta" data-tipo="electric"><span class="tarjeta__num insignia">#0025</span><img class="tarjeta__imagen" src="img/pokemon/25.png" alt="" width="150" height="150"><h2 class="tarjeta__titulo">Pikachu</h2><span class="chip" data-tipo="electric">electric</span><p class="tarjeta__meta">0.4 m · 6.0 kg</p><p class="tarjeta__suave">Generación I · Kanto</p><div class="tarjeta__acciones"><a class="boton boton--peq" href="#">Capturar</a></div></article>
+  <article class="tarjeta" data-tipo="fire"><span class="tarjeta__num insignia">Nv. 8</span><img class="tarjeta__imagen" src="img/pokemon/4.png" alt="" width="150" height="150"><h2 class="tarjeta__titulo">Chispa</h2><span class="chip" data-tipo="fire">fire</span><p class="tarjeta__meta">Charmander · #0004</p><p class="tarjeta__suave">Capturado el 20/09/2026 · Kanto</p><p class="tarjeta__notas">Con apodo y notas.</p><div class="tarjeta__acciones"><a class="boton boton--peq" href="#">Editar</a><button class="boton boton--peq boton--peligro">Liberar</button></div></article>
+  <article class="tarjeta" data-tipo="ghost"><span class="tarjeta__num insignia">#0094</span><img class="tarjeta__imagen" src="img/pokemon/94.png" alt="" width="150" height="150"><h2 class="tarjeta__titulo">Gengar</h2><span class="chip" data-tipo="ghost">ghost</span><p class="tarjeta__meta">1.5 m · 40.5 kg</p><p class="tarjeta__suave">Generación I · Kanto</p></article>
+</div></section>
+
+<section class="guia-seccion"><h2>Avisos y estado vacío</h2>
+  <p class="aviso aviso--ok" role="status">Pokémon capturado.</p>
+  <p class="aviso aviso--error" role="alert">Falta escribir la sentencia SQL_LISTAR_POKEDEX en web/consultas.php</p>
+  <div class="vacio"><p class="vacio__titulo">Tu Pokédex está vacía</p><p>Todavía no has capturado ningún Pokémon.</p><a class="boton" href="index.php">Explorar el catálogo</a></div></section>
+</main>
+<footer class="pie">Datos e imágenes de <a href="https://pokeapi.co/">PokéAPI</a> · Actividad de DAW · <a href="guia-estilos.html">Guía de estilos</a></footer>
+<script>
+  // Guía: reproduce la animación de captura (D6) sobre la pokébola de la cabecera.
+  document.getElementById('demo-captura')?.addEventListener('click', () => {
+    document.body.classList.remove('captura-nueva');
+    void document.body.offsetWidth; // fuerza el reinicio de la animación
+    document.body.classList.add('captura-nueva');
+  });
+</script>
+</body></html>

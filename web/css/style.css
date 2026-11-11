@@ -1,0 +1,326 @@
+/*
+ * POKÉDEX DAW · Sistema de diseño
+ * Documentación y criterios: ../DESIGN.md · Guía visual: guia-estilos.html
+ *
+ * Arquitectura en capas (el orden de @layer manda sobre la especificidad):
+ *   tokens → base → layout → componentes → utilidades
+ * Regla de oro: los componentes SOLO usan tokens (var(--…)), nunca valores sueltos.
+ */
+@layer tokens, base, layout, componentes, utilidades;
+
+/* ========================================================================
+   1. TOKENS
+   Primitivos (paleta) → semánticos (para qué sirve) → componentes.
+   light-dark(claro, oscuro) resuelve el tema; color-scheme lo elige.
+   ======================================================================== */
+@layer tokens {
+  :root {
+    color-scheme: light dark;
+
+    /* --- Escalas -------------------------------------------------------- */
+    --esp-1: .25rem;  --esp-2: .5rem;  --esp-3: .75rem; --esp-4: 1rem;
+    --esp-5: 1.5rem;  --esp-6: 2rem;   --esp-7: 3rem;   --esp-8: 4rem;
+
+    --radio-s: 8px;   --radio-m: 12px; --radio-l: 20px; --radio-pill: 999px;
+
+    --fuente-base: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --tam-xs: .78rem; --tam-s: .875rem; --tam-m: 1rem;
+    --tam-l: clamp(1.15rem, 1.05rem + .5vw, 1.35rem);
+    --tam-xl: clamp(1.6rem, 1.3rem + 1.5vw, 2.4rem);
+    --peso-normal: 400; --peso-medio: 600; --peso-fuerte: 800;
+    --interlineado: 1.5;
+
+    --ancho-contenedor: 1280px;
+    --ancho-estrecho: 640px;
+
+    --mov-rapido: 120ms; --mov-normal: 220ms; --mov-lento: 400ms;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+
+    --z-cabecera: 10; --z-saltar: 100;
+
+    /* --- Color semántico (claro | oscuro) ------------------------------- */
+    --color-fondo:          light-dark(#f4f5f9, #11141c);
+    --color-superficie:     light-dark(#ffffff, #1b202c);
+    --color-superficie-2:   light-dark(#eceef4, #232a39);
+    --color-borde:          light-dark(#dde1ea, #2f3849);
+    --color-texto:          light-dark(#1b2030, #eef0f6);
+    --color-texto-suave:    light-dark(#566074, #a3acbf);
+
+    --color-marca:          #250be5d2;                         /* blanco encima: 7,1:1 */
+    --color-marca-hover:    #3a32d6; 
+    --color-marca-texto:    light-dark(#250be5d2, #70a7ff);    /* marca usada COMO texto */
+    --color-sobre-marca:    #ffffff;
+    --color-foco:           light-dark(#1b2030, #ffffff); 
+
+    --color-peligro:        #b3261e;
+
+    --color-peligro-hover:  #8f1d17;
+    --color-exito-fondo:    light-dark(#dcf5e4, #16301f);
+    --color-exito-texto:    light-dark(#14532d, #9be8b4);
+    --color-error-fondo:    light-dark(#fde4e1, #3b1613);
+    --color-error-texto:    light-dark(#7f1d1d, #ffb4ab);
+
+    --sombra-1: 0 1px 2px light-dark(rgb(20 25 40 / .08), rgb(0 0 0 / .5));
+    --sombra-2: 0 4px 14px light-dark(rgb(20 25 40 / .10), rgb(0 0 0 / .45));
+    --sombra-3: 0 14px 30px light-dark(rgb(20 25 40 / .18), rgb(0 0 0 / .6));
+
+    /* --- Tipos de Pokémon: color y color de texto con contraste ≥ 4,5:1 --- */
+    --tipo-normal:   #a8a77a; --tipo-normal-on:   #1b2030;
+    --tipo-fire:     #ee8130; --tipo-fire-on:     #1b2030;
+    --tipo-water:    #6390f0; --tipo-water-on:    #1b2030;
+    --tipo-electric: #f7d02c; --tipo-electric-on: #1b2030;
+    --tipo-grass:    #7ac74c; --tipo-grass-on:    #1b2030;
+    --tipo-ice:      #96d9d6; --tipo-ice-on:      #1b2030;
+    --tipo-fighting: #c22e28; --tipo-fighting-on: #ffffff;
+    --tipo-poison:   #a33ea1; --tipo-poison-on:   #ffffff;
+    --tipo-ground:   #e2bf65; --tipo-ground-on:   #1b2030;
+    --tipo-flying:   #a98ff3; --tipo-flying-on:   #1b2030;
+    --tipo-psychic:  #f95587; --tipo-psychic-on:  #1b2030;
+    --tipo-bug:      #a6b91a; --tipo-bug-on:      #1b2030;
+    --tipo-rock:     #b6a136; --tipo-rock-on:     #1b2030;
+    --tipo-ghost:    #735797; --tipo-ghost-on:    #ffffff;
+    --tipo-dragon:   #6f35fc; --tipo-dragon-on:   #ffffff;
+    --tipo-dark:     #705746; --tipo-dark-on:     #ffffff;
+    --tipo-steel:    #b7b7ce; --tipo-steel-on:    #1b2030;
+    --tipo-fairy:    #d685ad; --tipo-fairy-on:    #1b2030;
+  }
+
+  /* Tema forzado por el botón de la cabecera (js/tema.js) */
+  :root[data-tema="light"] { color-scheme: light; }
+  :root[data-tema="dark"]  { color-scheme: dark; }
+
+  /* Atributo data-tipo="fire" → --tipo y --tipo-on para cualquier componente */
+  [data-tipo="normal"]   { --tipo: var(--tipo-normal);   --tipo-on: var(--tipo-normal-on); }
+  [data-tipo="fire"]     { --tipo: var(--tipo-fire);     --tipo-on: var(--tipo-fire-on); }
+  [data-tipo="water"]    { --tipo: var(--tipo-water);    --tipo-on: var(--tipo-water-on); }
+  [data-tipo="electric"] { --tipo: var(--tipo-electric); --tipo-on: var(--tipo-electric-on); }
+  [data-tipo="grass"]    { --tipo: var(--tipo-grass);    --tipo-on: var(--tipo-grass-on); }
+  [data-tipo="ice"]      { --tipo: var(--tipo-ice);      --tipo-on: var(--tipo-ice-on); }
+  [data-tipo="fighting"] { --tipo: var(--tipo-fighting); --tipo-on: var(--tipo-fighting-on); }
+  [data-tipo="poison"]   { --tipo: var(--tipo-poison);   --tipo-on: var(--tipo-poison-on); }
+  [data-tipo="ground"]   { --tipo: var(--tipo-ground);   --tipo-on: var(--tipo-ground-on); }
+  [data-tipo="flying"]   { --tipo: var(--tipo-flying);   --tipo-on: var(--tipo-flying-on); }
+  [data-tipo="psychic"]  { --tipo: var(--tipo-psychic);  --tipo-on: var(--tipo-psychic-on); }
+  [data-tipo="bug"]      { --tipo: var(--tipo-bug);      --tipo-on: var(--tipo-bug-on); }
+  [data-tipo="rock"]     { --tipo: var(--tipo-rock);     --tipo-on: var(--tipo-rock-on); }
+  [data-tipo="ghost"]    { --tipo: var(--tipo-ghost);    --tipo-on: var(--tipo-ghost-on); }
+  [data-tipo="dragon"]   { --tipo: var(--tipo-dragon);   --tipo-on: var(--tipo-dragon-on); }
+  [data-tipo="dark"]     { --tipo: var(--tipo-dark);     --tipo-on: var(--tipo-dark-on); }
+  [data-tipo="steel"]    { --tipo: var(--tipo-steel);    --tipo-on: var(--tipo-steel-on); }
+  [data-tipo="fairy"]    { --tipo: var(--tipo-fairy);    --tipo-on: var(--tipo-fairy-on); }
+}
+
+/* ========================================================================
+   2. BASE · reset mínimo y elementos HTML sin clase
+   ======================================================================== */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; min-height: 100dvh; display: flex; flex-direction: column;
+    font: var(--peso-normal) var(--tam-m)/var(--interlineado) var(--fuente-base);
+    background: var(--color-fondo); color: var(--color-texto);
+  }
+  h1, h2, h3, p, ul, figure { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  img { max-width: 100%; height: auto; }
+  a { color: var(--color-marca-texto); text-underline-offset: .2em; }
+  h1 { font-size: var(--tam-xl); line-height: 1.15; font-weight: var(--peso-fuerte); letter-spacing: -.01em; }
+  h2 { font-size: var(--tam-l); line-height: 1.25; }
+
+  /* Foco visible y coherente para teclado */
+  :focus-visible { outline: 3px solid var(--color-foco); outline-offset: 2px; border-radius: var(--radio-s); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  }
+}
+
+/* ========================================================================
+   3. LAYOUT · estructura de página
+   ======================================================================== */
+@layer layout {
+  .saltar {
+    position: absolute; left: var(--esp-4); top: -4rem; z-index: var(--z-saltar);
+    padding: var(--esp-2) var(--esp-4); background: var(--color-superficie); color: var(--color-texto);
+    border-radius: var(--radio-m); box-shadow: var(--sombra-3); transition: top var(--mov-rapido);
+  }
+  .saltar:focus { top: var(--esp-3); }
+
+  .cabecera {
+    position: sticky; top: 0; z-index: var(--z-cabecera);
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--esp-3) var(--esp-5);
+    padding: var(--esp-3) clamp(var(--esp-4), 4vw, var(--esp-7));
+    background: linear-gradient(135deg, var(--color-marca), var(--color-marca-hover));
+    color: var(--color-sobre-marca); box-shadow: var(--sombra-2);
+  }
+  .cabecera__herramientas { margin-left: auto; display: flex; gap: var(--esp-2); align-items: center; }
+
+  .contenedor { flex: 1; width: 100%; max-width: var(--ancho-contenedor); margin-inline: auto;
+    padding: var(--esp-6) clamp(var(--esp-4), 4vw, var(--esp-7)) var(--esp-7); display: grid; gap: var(--esp-5); align-content: start; }
+  .contenedor--estrecho { max-width: var(--ancho-estrecho); }
+
+  .titulo-pagina { display: grid; gap: var(--esp-1); }
+  .titulo-pagina__sub { color: var(--color-texto-suave); }
+
+  .rejilla { display: grid; gap: var(--esp-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); transition: opacity var(--mov-normal); }
+  .rejilla > .vacio { grid-column: 1 / -1; }
+  .rejilla.is-cargando { opacity: .45; pointer-events: none; }
+
+  .pie { padding: var(--esp-5) clamp(var(--esp-4), 4vw, var(--esp-7)); text-align: center; font-size: var(--tam-s); color: var(--color-texto-suave); border-top: 1px solid var(--color-borde); }
+}
+
+/* ========================================================================
+   4. COMPONENTES
+   ======================================================================== */
+@layer componentes {
+
+  /* --- Marca y navegación ------------------------------------------------ */
+  .marca { display: inline-flex; align-items: center; gap: var(--esp-2); color: inherit; text-decoration: none;
+    font-size: var(--tam-l); font-weight: var(--peso-fuerte); letter-spacing: .3px; }
+  .marca__bola { width: 1.6rem; height: 1.6rem; border-radius: 50%; flex: none;
+    background: radial-gradient(circle at center, #fff 0 .22rem, #1b2030 .22rem .3rem, transparent .3rem),
+                linear-gradient(#fff 0 0) center/100% .12rem no-repeat,
+                linear-gradient(to bottom, #ef4056 50%, #fff 50%);
+    border: .12rem solid #1b2030; box-shadow: var(--sombra-1); transition: transform var(--mov-lento) var(--ease); }
+  .marca:hover .marca__bola { transform: rotate(360deg); }
+    /* MEJORA D6: celebración al capturar (el <body> lleva la clase una sola vez) */
+  @keyframes captura {
+    0%   { transform: translateY(0) rotate(0) scale(1); }
+    30%  { transform: translateY(calc(var(--esp-4) * -1)) rotate(180deg) scale(1.1); }
+    60%  { transform: translateY(0) rotate(360deg) scale(1); }
+    75%  { transform: translateY(calc(var(--esp-2) * -1)) rotate(360deg) scale(1.05); }
+    100% { transform: translateY(0) rotate(360deg) scale(1); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    body.captura-nueva .marca__bola { animation: captura calc(var(--mov-lento) * 2) var(--ease); }
+  }
+  .marca__detalle { font-weight: var(--peso-normal); opacity: .8; }
+
+  .nav { display: flex; gap: var(--esp-1); }
+  .nav__enlace { padding: var(--esp-2) var(--esp-4); border-radius: var(--radio-pill); color: inherit; text-decoration: none; font-weight: var(--peso-medio);
+    transition: background var(--mov-rapido); }
+  .nav__enlace:hover { background: rgb(255 255 255 / .2); }
+  .nav__enlace[aria-current="page"] { background: #fff; color: var(--color-marca); }
+
+  /* --- Botones ------------------------------------------------------------ */
+  .boton { display: inline-flex; align-items: center; justify-content: center; gap: var(--esp-2);
+    padding: var(--esp-2) var(--esp-4); min-height: 2.5rem; border: 2px solid transparent; border-radius: var(--radio-pill);
+    background: var(--color-marca); color: var(--color-sobre-marca);
+    font: inherit; font-weight: var(--peso-medio); line-height: 1.2; text-decoration: none; cursor: pointer;
+    transition: background var(--mov-rapido), transform var(--mov-rapido) var(--ease), box-shadow var(--mov-rapido); }
+  .boton:hover { background: var(--color-marca-hover); }
+  .boton:active { transform: scale(.97); }
+  .boton:disabled, .boton[aria-disabled="true"] { opacity: .5; cursor: not-allowed; pointer-events: none; }
+  .boton--secundario { background: transparent; color: var(--color-texto); border-color: var(--color-borde); }
+  .boton--secundario:hover { background: var(--color-superficie-2); }
+  .boton--peligro { background: var(--color-peligro); }
+  .boton--peligro:hover { background: var(--color-peligro-hover); }
+  .boton--peq { min-height: 2.1rem; padding: var(--esp-1) var(--esp-3); font-size: var(--tam-s); }
+  .boton--icono { padding: 0; width: 2.5rem; background: rgb(255 255 255 / .18); color: inherit; }
+  .boton--icono:hover { background: rgb(255 255 255 / .3); }
+  .cabecera :focus-visible { outline-color: #fff; }
+
+  /* --- Formularios -------------------------------------------------------- */
+  .campo { display: grid; gap: var(--esp-1); font-weight: var(--peso-medio); font-size: var(--tam-s); }
+  .campo__ayuda { font-weight: var(--peso-normal); color: var(--color-texto-suave); }
+  .control { width: 100%; padding: var(--esp-2) var(--esp-3); min-height: 2.6rem; font: inherit; font-weight: var(--peso-normal);
+    background: var(--color-superficie); color: var(--color-texto);
+    border: 2px solid var(--color-borde); border-radius: var(--radio-m); transition: border-color var(--mov-rapido); }
+  .control:hover { border-color: var(--color-texto-suave); }
+  .control:focus-visible { border-color: var(--color-marca-texto); outline-offset: 0; }
+  textarea.control { resize: vertical; }
+
+  .formulario { display: grid; gap: var(--esp-4); padding: var(--esp-5); background: var(--color-superficie);
+    border: 1px solid var(--color-borde); border-radius: var(--radio-l); box-shadow: var(--sombra-1); }
+  .formulario__acciones { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
+
+  .buscador { display: flex; flex-wrap: wrap; gap: var(--esp-3); }
+  .buscador .control { flex: 1 1 220px; max-width: 360px; border-radius: var(--radio-pill); padding-inline: var(--esp-4); }
+
+  /* --- Chip de tipo e insignia de nivel ------------------------------------ */
+  .chip { display: inline-block; padding: 2px var(--esp-3); border-radius: var(--radio-pill);
+    background: var(--tipo, var(--tipo-normal)); color: var(--tipo-on, var(--tipo-normal-on));
+    font-size: var(--tam-xs); font-weight: var(--peso-medio); text-transform: capitalize; }
+  .insignia { display: inline-block; padding: 2px var(--esp-2); border-radius: var(--radio-s);
+    background: var(--color-superficie-2); color: var(--color-texto); font-size: var(--tam-xs); font-weight: var(--peso-fuerte);
+    font-variant-numeric: tabular-nums; }
+
+  /* --- Tarjeta de Pokémon --------------------------------------------------- */
+  .tarjeta {
+    position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--esp-1); text-align: center;
+    padding: var(--esp-4); background: var(--color-superficie); border: 1px solid var(--color-borde);
+    border-top: 5px solid var(--tipo, var(--tipo-normal)); border-radius: var(--radio-l); box-shadow: var(--sombra-1);
+    animation: aparecer var(--mov-lento) var(--ease) both;
+    transition: transform var(--mov-normal) var(--ease), box-shadow var(--mov-normal); }
+  .tarjeta__num { position: absolute; top: var(--esp-3); left: var(--esp-3); }
+  .tarjeta__imagen { width: 150px; height: 150px; object-fit: contain; border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--tipo, var(--tipo-normal)) 38%, transparent), transparent 70%);
+    filter: drop-shadow(0 6px 6px rgb(0 0 0 / .18)); transition: transform var(--mov-normal) var(--ease); }
+  .tarjeta__titulo { font-size: var(--tam-l); margin-top: var(--esp-1); overflow-wrap: anywhere; }
+  .tarjeta__meta { font-size: var(--tam-s); font-variant-numeric: tabular-nums; }
+  .tarjeta__suave { font-size: var(--tam-xs); color: var(--color-texto-suave); }
+  .tarjeta__notas { font-size: var(--tam-s); font-style: italic; color: var(--color-texto-suave); }
+  .tarjeta__acciones { display: flex; gap: var(--esp-2); margin-top: auto; padding-top: var(--esp-3); }
+  .tarjeta__acciones form { margin: 0; }
+  @media (hover: hover) {
+    .tarjeta:hover { transform: translateY(-6px); box-shadow: var(--sombra-3); }
+    .tarjeta:hover .tarjeta__imagen { transform: scale(1.1) rotate(-3deg); }
+  }
+
+  /* Ficha: cabecera del formulario de captura */
+  .ficha { display: flex; align-items: center; gap: var(--esp-4); padding: var(--esp-4);
+    background: var(--color-superficie); border: 1px solid var(--color-borde); border-left: 6px solid var(--tipo, var(--tipo-normal));
+    border-radius: var(--radio-l); box-shadow: var(--sombra-1); }
+  .ficha__imagen { width: 96px; height: 96px; object-fit: contain; flex: none; }
+  .ficha__nombre { font-size: var(--tam-l); font-weight: var(--peso-fuerte); }
+
+  /* --- Estadísticas --------------------------------------------------------- */
+  .estadisticas { display: flex; flex-wrap: wrap; gap: var(--esp-2); }
+  .estadistica { display: inline-flex; align-items: center; gap: var(--esp-2);
+    padding: var(--esp-1) var(--esp-3) var(--esp-1) var(--esp-2); background: var(--color-superficie);
+    border: 1px solid var(--color-borde); border-radius: var(--radio-pill); box-shadow: var(--sombra-1);
+    font-size: var(--tam-s); color: var(--color-texto); text-decoration: none; }
+  .estadistica::before { content: ""; width: .7rem; height: .7rem; border-radius: 50%; background: var(--tipo, var(--tipo-normal)); flex: none; }
+  .estadistica strong { font-variant-numeric: tabular-nums; }
+  a.estadistica:hover { border-color: var(--color-marca-texto); }
+
+  /* MEJORA D2: Filtro por tipo del catálogo */
+  .filtros-tipo { margin-block: var(--esp-4) var(--esp-2); }
+  .filtros-tipo .estadistica { cursor: pointer; }
+  .filtros-tipo .estadistica::before { display: none; }
+  .filtros-tipo .estadistica[aria-current="true"] {
+    border-color: var(--color-marca-texto);
+    background: var(--color-superficie-2);
+    box-shadow: inset 0 0 0 1px var(--color-marca-texto), var(--sombra-1);
+  }
+
+  /* --- Avisos, estado vacío y estado en vivo -------------------------------- */
+  .aviso { padding: var(--esp-3) var(--esp-4); border-radius: var(--radio-m); border-left: 5px solid currentColor; box-shadow: var(--sombra-1); }
+  .aviso--ok    { background: var(--color-exito-fondo); color: var(--color-exito-texto); }
+  .aviso--error { background: var(--color-error-fondo); color: var(--color-error-texto); }
+
+  .vacio { display: grid; justify-items: center; gap: var(--esp-3); padding: var(--esp-7) var(--esp-4); text-align: center;
+    background: var(--color-superficie); border: 2px dashed var(--color-borde); border-radius: var(--radio-l); color: var(--color-texto-suave); }
+  .vacio__titulo { color: var(--color-texto); font-size: var(--tam-l); font-weight: var(--peso-medio); }
+
+  .estado { color: var(--color-texto-suave); font-size: var(--tam-s); min-height: 1.4em; }
+
+  /* --- Guía de estilos (solo documentación) --------------------------------- */
+  .muestra { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--esp-3); }
+  .muestra__color { display: grid; gap: var(--esp-1); font-size: var(--tam-xs); }
+  .muestra__bloque { height: 3rem; border-radius: var(--radio-m); border: 1px solid var(--color-borde); }
+  .guia-seccion { display: grid; gap: var(--esp-3); }
+  .guia-seccion > h2 { padding-bottom: var(--esp-2); border-bottom: 2px solid var(--color-borde); }
+  .fila { display: flex; flex-wrap: wrap; gap: var(--esp-3); align-items: center; }
+
+  @keyframes aparecer { from { opacity: 0; transform: translateY(12px) scale(.97); } }
+}
+
+/* ========================================================================
+   5. UTILIDADES · mínimas y a propósito
+   ======================================================================== */
+@layer utilidades {
+  .solo-lector { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .centrado { text-align: center; }
+}

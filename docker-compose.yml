@@ -1,0 +1,38 @@
+# Arranca MySQL (con el esquema y los datos cargados) y la web PHP.
+#   cp .env.example .env   (y edita las claves)
+#   docker compose up -d --build
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?define MYSQL_ROOT_PASSWORD en .env}
+      MYSQL_DATABASE: pokemon
+      MYSQL_USER: ${DB_USER:-pokemon}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?define DB_PASSWORD en .env}
+    ports:
+      - "3402:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d:ro   # se ejecutan 01_schema.sql y 02_datos.sql al crear el volumen
+      - pokemon_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 20
+
+  web:
+    build: ./web
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_NAME: pokemon
+      DB_USER: ${DB_USER:-pokemon}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./web:/var/www/html   # edita web/consultas.php y recarga el navegador (sin reconstruir)
+    ports:
+      - "8080:80"
+
+volumes:
+  pokemon_data:
